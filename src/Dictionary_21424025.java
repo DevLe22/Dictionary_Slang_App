@@ -16,6 +16,48 @@ public class Dictionary_21424025 {
         scanner = new Scanner(System.in);
     }
 
+    public void showWord(String setKey){
+        Set<String> result = this.data_word.get(setKey);
+
+        if(result==null){
+            System.out.println("The slang does not match with any word in slang dictionary !!!");
+            return;
+        }
+        System.out.println(setKey.toUpperCase()+" -----> "+ result);
+
+    }
+
+    public Set<String> searchWordSlang(String slang_word){
+        history.add(slang_word);
+        return data_word.get(slang_word);
+    }
+
+    public void readFileSlang(String path){
+        data_word = new TreeMap<String, Set<String>>();
+        File file = new File(path);
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            String line;
+
+            while((line = bufferedReader.readLine())!=null){
+
+                String[] hayStack = line.split("`");
+                if(hayStack.length!=2){
+                    continue;
+                }
+                String [] meanList = hayStack[1].split("\\|");
+                Set<String> meanSet = new HashSet<String>(List.of(meanList));
+                data_word.put(hayStack[0],meanSet);
+            }
+            bufferedReader.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     public void GUI(){
         while (true){
@@ -54,6 +96,14 @@ public class Dictionary_21424025 {
                     else {
                         System.out.println("There no result to display");
                     }
+                    break;
+                case "3":
+                    for(String i : history){
+                        System.out.println(i);
+                    }
+                    break;
+                case "4":
+                    addSlangWord();
                     break;
                 case "0":
                     saveHistory("activities/search_history.txt");
