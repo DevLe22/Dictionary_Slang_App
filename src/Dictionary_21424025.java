@@ -16,6 +16,24 @@ public class Dictionary_21424025 {
         scanner = new Scanner(System.in);
     }
 
+    List<String> searchByDefinition(String word_define){
+        List<String> FoundDef = new ArrayList<>();
+        Set<Map.Entry<String ,Set<String>>> entries = data_word.entrySet();
+        for(Map.Entry<String, Set<String>> indexEntry : entries){
+            Set<String> definition = indexEntry.getValue();
+            for(String indexValue : definition){
+                String wordUpperCase = word_define.toUpperCase();
+                String upperFirstWord = word_define.substring(0,1);
+                String lowerWord = word_define.toLowerCase();
+                String startWord = upperFirstWord + word_define.substring(1).toLowerCase();
+                if(indexValue.contains(wordUpperCase)||indexValue.contains(startWord)
+                        ||indexValue.contains(lowerWord)||indexValue.contains(word_define)){
+                    FoundDef.add(indexEntry.getKey());
+                }
+            }
+        }
+        return FoundDef;
+    }
     public void showWord(String setKey){
         Set<String> result = this.data_word.get(setKey);
 
@@ -58,7 +76,87 @@ public class Dictionary_21424025 {
 
     }
 
+    public void loadSlangHistory(String path){
+        history = new ArrayList<>();
+        File file = new File(path);
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            String line = null;
+            while((line=bufferedReader.readLine())!=null){
+                history.add(line);
+            }
+            bufferedReader.close();
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadAdd_history(String path){
+        add_history = new TreeMap<String,Set<String>>();
+        File file = new File(path);
+        try {
+            FileReader fr = new FileReader(file);
+            BufferedReader br= new BufferedReader(fr);
+            String line ;
+            while((line=br.readLine())!=null){
+                String[] splitedArray = line.split("`");
+                if(line.length()!=2){
+                    continue;
+                }
+                String [] rawDef = splitedArray[1].split("\\|");
+                Set<String> setWord = new HashSet<String>(List.of(rawDef));
+                add_history.put(splitedArray[0],setWord);
+            }
+            fr.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadUpdate_history(String path){
+        edit_history = new TreeMap<String,Set<String>>();
+        File file = new File(path);
+        try {
+            FileReader fr = new FileReader(file);
+            BufferedReader br= new BufferedReader(fr);
+            String line ;
+            while((line=br.readLine())!=null){
+                String[] splitedArray = line.split("`");
+                if(line.length()!=2){
+                    continue;
+                }
+                String [] rawDef = splitedArray[1].split("\\|");
+                Set<String> setWord = new HashSet<String>(List.of(rawDef));
+                edit_history.put(splitedArray[0],setWord);
+            }
+            fr.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadDelete(String path){
+        delete_history = new ArrayList<>();
+        File file = new File(path);
+        try {
+            FileReader fr= new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+            String line ;
+            while ((line = br.readLine())!=null){
+                delete_history.add(line);
+            }
+            fr.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public String randomASlangWord(){
+        Object[] convertedToArray = data_word.keySet().toArray();
+        return (String)convertedToArray[new Random().nextInt(convertedToArray.length)];
+    }
     public void GUI(){
         while (true){
             System.out.println("\n<----------------------------------------------------------------------->");
