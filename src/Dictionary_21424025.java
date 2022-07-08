@@ -5,34 +5,14 @@ public class Dictionary_21424025 {
     public List<String> history, delete_history;
     Scanner scanner;
     String thisDaySlangWord ;
-
     public Dictionary_21424025(){
         readFileSlang("data/slang.txt");
         loadSlangHistory("activities/search_history.txt");
         loadAdd_history("activities/add.txt");
         loadDelete("activities/delete.txt");
-        loadUpdate_history("activities/update.txt");
+        loadEdit_history("activities/edit.txt");
         thisDaySlangWord = randomASlangWord();
         scanner = new Scanner(System.in);
-    }
-
-    List<String> searchByDefinition(String word_define){
-        List<String> FoundDef = new ArrayList<>();
-        Set<Map.Entry<String ,Set<String>>> entries = data_word.entrySet();
-        for(Map.Entry<String, Set<String>> indexEntry : entries){
-            Set<String> definition = indexEntry.getValue();
-            for(String indexValue : definition){
-                String wordUpperCase = word_define.toUpperCase();
-                String upperFirstWord = word_define.substring(0,1);
-                String lowerWord = word_define.toLowerCase();
-                String startWord = upperFirstWord + word_define.substring(1).toLowerCase();
-                if(indexValue.contains(wordUpperCase)||indexValue.contains(startWord)
-                        ||indexValue.contains(lowerWord)||indexValue.contains(word_define)){
-                    FoundDef.add(indexEntry.getKey());
-                }
-            }
-        }
-        return FoundDef;
     }
     public void showWord(String setKey){
         Set<String> result = this.data_word.get(setKey);
@@ -44,12 +24,10 @@ public class Dictionary_21424025 {
         System.out.println(setKey.toUpperCase()+" -----> "+ result);
 
     }
-
     public Set<String> searchWordSlang(String slang_word){
         history.add(slang_word);
         return data_word.get(slang_word);
     }
-
     public void readFileSlang(String path){
         data_word = new TreeMap<String, Set<String>>();
         File file = new File(path);
@@ -75,7 +53,24 @@ public class Dictionary_21424025 {
         }
 
     }
-
+    List<String> searchByDefinition(String word_define){
+        List<String> FoundDef = new ArrayList<>();
+        Set<Map.Entry<String ,Set<String>>> entries = data_word.entrySet();
+        for(Map.Entry<String, Set<String>> indexEntry : entries){
+            Set<String> definition = indexEntry.getValue();
+            for(String indexValue : definition){
+                String wordUpperCase = word_define.toUpperCase();
+                String upperFirstWord = word_define.substring(0,1);
+                String lowerWord = word_define.toLowerCase();
+                String startWord = upperFirstWord + word_define.substring(1).toLowerCase();
+                if(indexValue.contains(wordUpperCase)||indexValue.contains(startWord)
+                        ||indexValue.contains(lowerWord)||indexValue.contains(word_define)){
+                    FoundDef.add(indexEntry.getKey());
+                }
+            }
+        }
+        return FoundDef;
+    }
     public void loadSlangHistory(String path){
         history = new ArrayList<>();
         File file = new File(path);
@@ -91,7 +86,6 @@ public class Dictionary_21424025 {
             e.printStackTrace();
         }
     }
-
     public void loadAdd_history(String path){
         add_history = new TreeMap<String,Set<String>>();
         File file = new File(path);
@@ -113,8 +107,7 @@ public class Dictionary_21424025 {
             e.printStackTrace();
         }
     }
-
-    public void loadUpdate_history(String path){
+    public void loadEdit_history(String path){
         edit_history = new TreeMap<String,Set<String>>();
         File file = new File(path);
         try {
@@ -135,7 +128,6 @@ public class Dictionary_21424025 {
             e.printStackTrace();
         }
     }
-
     public void loadDelete(String path){
         delete_history = new ArrayList<>();
         File file = new File(path);
@@ -152,11 +144,9 @@ public class Dictionary_21424025 {
         }
 
     }
-
-    public String randomASlangWord(){
-        Object[] convertedToArray = data_word.keySet().toArray();
-        return (String)convertedToArray[new Random().nextInt(convertedToArray.length)];
-    }
+    //  public void addSlangHistory(String word){
+    //      history.add(word);
+    //  }
     public void saveHistory(String path){
         File file = new File(path);
         try {
@@ -327,7 +317,7 @@ public class Dictionary_21424025 {
 
         }
     }
-    public void updateSlangWord(){
+    public void editSlangWord(){
         System.out.print("Enter the slang word you want to edit: ");
         String word = scanner.nextLine();
         if(data_word.containsKey(word)){
@@ -424,6 +414,108 @@ public class Dictionary_21424025 {
         }
 
     }
+    public String randomASlangWord(){
+        Object[] convertedToArray = data_word.keySet().toArray();
+        return (String)convertedToArray[new Random().nextInt(convertedToArray.length)];
+    }
+    public Map<String,Set<String>> generateResultQuiz(){
+        Map<String, Set<String>> result = new HashMap<String,Set<String>>();
+        for(int i=0;i<4;i++){
+            String wordRandom = randomASlangWord();
+            Set<String> def = data_word.get(wordRandom);
+            result.put(wordRandom,def);
+        }
+        return result;
+    }
+    public void generateSlangQuiz(){
+        System.out.println("\n<---------- You're participate in SLANG QUIZ ---------->");
+        Map<String, Set<String>> QuizSet = generateResultQuiz();
+        int question = new Random().nextInt(4)+1;
+        String SavedQuestion="";
+        Set<String> SavedAnswer =new HashSet<>();
+        int answer = 0;
+        int count = 0;
+        for(Map.Entry<String,Set<String>> indexEntry : QuizSet.entrySet()){
+            count++;
+            System.out.println(count+". "+indexEntry.getValue());
+            if(count==question){
+                answer=count;
+                SavedQuestion = indexEntry.getKey();
+                SavedAnswer = indexEntry.getValue();
+            }
+        }
+        System.out.println("The question is "+SavedQuestion);
+
+        int choice = 0;
+
+        while(true){
+            try {
+                System.out.print("Enter your choice (from 1 to 4): ");
+                choice = Integer.parseInt(scanner.nextLine());
+
+            }
+            catch (NumberFormatException ex){
+                System.out.println("You must enter an integer, please try again!!");
+            }
+            if(choice<1||choice>4){
+                System.out.println("The value must be an integer from 1 to 4");
+                continue;
+            }
+            break;
+        }
+        if(choice==answer){
+            System.out.println("You're right");
+        }
+        else{
+            System.out.println("\nYou're wrong");
+            System.out.println("The answer is "+SavedAnswer );
+        }
+    }
+    public void generateDefinitionQuiz(){
+        System.out.println("\n<---------- You're participate in DEFINITION QUIZ ---------->");
+        Map<String, Set<String>> DefSet = generateResultQuiz();
+        int question = new Random().nextInt(4)+1;
+
+        String SavedAnswer="";
+        Set<String> Questions =new HashSet<>();
+        int answer = 0;
+        int count = 0;
+        for(Map.Entry<String,Set<String>> indexEntry : DefSet.entrySet()){
+            count++;
+            System.out.println(count+". "+indexEntry.getKey());
+            if(count==question){
+                answer=count;
+                Questions= indexEntry.getValue();
+                SavedAnswer = indexEntry.getKey();
+            }
+        }
+        System.out.println("The question is "+Questions);
+
+        int choice = 0;
+
+        while(true){
+            try {
+                System.out.print("Enter your choice (from 1 to 4): ");
+                choice = Integer.parseInt(scanner.nextLine());
+
+            }
+            catch (NumberFormatException ex){
+                System.out.println("You must enter an integer, please try again!!");
+            }
+            if(choice<1||choice>4){
+                System.out.println("The value must be an integer from 1 to 4");
+                continue;
+            }
+            break;
+        }
+        if(choice==answer){
+            System.out.println("You're right");
+        }
+        else{
+            System.out.println("\nYou're wrong");
+            System.out.println("The answer is "+SavedAnswer );
+        }
+    }
     public void GUI(){
         while (true){
             System.out.println("\n<----------------------------------------------------------------------->");
@@ -470,6 +562,24 @@ public class Dictionary_21424025 {
                 case "4":
                     addSlangWord();
                     break;
+                case "5":
+                    editSlangWord();
+                    break;
+                case "6":
+                    deleteSlangWord();
+                    break;
+                case "7":
+                    resetDictionary();
+                    break;
+                case "8":
+                    showWord(thisDaySlangWord);
+                    break;
+                case "9":
+                    generateSlangQuiz();
+                    break;
+                case "10":
+                    generateDefinitionQuiz();
+                    break;
                 case "0":
                     saveHistory("activities/search_history.txt");
                     saveAddHistory("activities/add.txt");
@@ -477,6 +587,7 @@ public class Dictionary_21424025 {
                     saveEditHistory("activities/edit.txt");
                     return;
             }
+
         }
     }
 
