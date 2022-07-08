@@ -128,22 +128,22 @@ public class Dictionary_21424025 {
             e.printStackTrace();
         }
     }
-    public void loadDelete(String path){
-        delete_history = new ArrayList<>();
-        File file = new File(path);
-        try {
-            FileReader fr= new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
-            String line ;
-            while ((line = br.readLine())!=null){
-                delete_history.add(line);
-            }
-            fr.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
+//    public void loadDelete(String path){
+//        delete_history = new ArrayList<>();
+//        File file = new File(path);
+//        try {
+//            FileReader fr= new FileReader(file);
+//            BufferedReader br = new BufferedReader(fr);
+//            String line ;
+//            while ((line = br.readLine())!=null){
+//                delete_history.add(line);
+//            }
+//            fr.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
     //  public void addSlangHistory(String word){
     //      history.add(word);
     //  }
