@@ -1,3 +1,5 @@
+// Họ tên: Lê Gia Huy
+// MSSV : 21424025
 import java.io.*;
 import java.util.*;
 public class Dictionary_21424025 {
@@ -595,6 +597,7 @@ public class Dictionary_21424025 {
     }
 
     public static void main(String[] args) {
+
         Dictionary_21424025 dict21424025 = new Dictionary_21424025();
         dict21424025.GUI();
 
