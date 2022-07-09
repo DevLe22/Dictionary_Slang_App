@@ -517,6 +517,8 @@ public class Dictionary_21424025 {
             System.out.println("The answer is "+SavedAnswer );
         }
     }
+
+    //ui menu slang word
     public void GUI(){
         while (true){
             System.out.println("\n<----------------------------------------------------------------------->");
